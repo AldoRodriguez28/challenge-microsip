@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -64,7 +63,9 @@ const ListaProducto = () => {
 
   const calculaiva = async (costo) => {
     let newiva = parseFloat(costo * 0.16);
-    propModal.iva = parseFloat(newiva.toFixed(2));
+    let newPrice = parseFloat(parseFloat(costo) + newiva);
+    propModal.iva = newiva.toFixed(2);
+    propModal.price = newPrice.toFixed(2);
   };
   const handleClickOpen = () => {
     setOpen(true);
@@ -84,7 +85,7 @@ const ListaProducto = () => {
       propModal.iva === ""
     ) {
       return swal({
-        title: "Hubo un Error",
+        title: "Hubo un error",
         text: "Verifica los datos ingresados ",
         icon: "error",
         timer: "5000",
@@ -244,6 +245,7 @@ const ListaProducto = () => {
               disabled
             />
             <TextField
+              disabled
               id="price"
               autoFocus
               required={true}
@@ -253,7 +255,7 @@ const ListaProducto = () => {
                   <InputAdornment position="start">$</InputAdornment>
                 ),
               }}
-              defaultValue={propModal.price}
+              value={propModal.price}
               margin="dense"
               label="price"
               type="number"
