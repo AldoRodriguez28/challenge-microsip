@@ -13,7 +13,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import InputAdornment from "@mui/material/InputAdornment";
 import swal from "sweetalert";
 import axios from "axios";
-import { HolidayVillageTwoTone } from "@mui/icons-material";
 
 const API = "https://dry-chamber-65015.herokuapp.com/api/v1/productos/";
 
@@ -75,7 +74,7 @@ const Body = () => {
       const response = await axios.post(post, postObj);
       if (response.status === 201) {
         swal({
-          title: "Producto Creado",
+          title: "Producto Creado...",
           text: "El producto fue creado correctamente",
           icon: "success",
           timer: "5000",
