@@ -21,6 +21,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContentText from "@mui/material/DialogContentText";
 import InputAdornment from "@mui/material/InputAdornment";
 import Slide from "@mui/material/Slide";
+import swal from "sweetalert";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -49,27 +50,21 @@ const ListaProducto = () => {
   }, []);
   const handleChange = (event) => {
     const propiedad = event.target.name;
+    if (event.target.name === "costo") {
+      calculaiva(event.target.value);
+      setPropModal({ ...propModal, [event.target.name]: event.target.value });
+    }
     if (propiedad === "name") {
       propModal[event.target.name] = event.target.value;
-      // setPropModal({
-      //   ...propModal,
-      //   [event.target.name]: event.target.value,
-      // });
     } else {
       let data = parseFloat(event.target.value);
       propModal[event.target.name] = data;
-      // setPropModal({
-      // ...propModal,
-      //   [event.target.name]: data,
-      // });
     }
   };
 
-  const calculaiva = (price) => {
-    let newiva = parseFloat(price * 0.16);
+  const calculaiva = async (costo) => {
+    let newiva = parseFloat(costo * 0.16);
     propModal.iva = parseFloat(newiva.toFixed(2));
-    //   setPropModal({ ...propModal, iva: newiva.toFixed(2) });
-    console.log(propModal.iva);
   };
   const handleClickOpen = () => {
     setOpen(true);
@@ -82,6 +77,19 @@ const ListaProducto = () => {
     setEliminar(false);
   };
   const handlePatch = () => {
+    if (
+      propModal.name === "" ||
+      propModal.costo === "" ||
+      propModal.price === "" ||
+      propModal.iva === ""
+    ) {
+      return swal({
+        title: "Hubo un Error",
+        text: "Verifica los datos ingresados ",
+        icon: "error",
+        timer: "5000",
+      });
+    }
     calculaiva(propModal.price);
     setOpen(false);
     console.log(propModal);
@@ -90,8 +98,23 @@ const ListaProducto = () => {
     async function fetchData() {
       const response = await axios.patch(patch, propModal);
       console.log(response);
+      if (response.status === 200) {
+        swal({
+          title: "Producto Modificado",
+          text: "El producto fue modificado correctamente",
+          icon: "success",
+          timer: "5000",
+        });
+      } else {
+        swal({
+          title: "Hubo un Error",
+          text: "Verifica los datos ingresados ",
+          icon: "error",
+          timer: "5000",
+        });
+      }
       const response2 = await axios(API);
-      setProducts(response2.data);
+      //setProducts(response2.data);
     }
     fetchData();
   };
@@ -211,7 +234,7 @@ const ListaProducto = () => {
                   <InputAdornment position="start">$</InputAdornment>
                 ),
               }}
-              defaultValue={propModal.iva}
+              value={propModal.iva}
               margin="dense"
               label="IVA 16%"
               type="number"

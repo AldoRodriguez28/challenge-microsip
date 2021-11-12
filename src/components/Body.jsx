@@ -11,12 +11,16 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import InputAdornment from "@mui/material/InputAdornment";
+import swal from "sweetalert";
 import axios from "axios";
+import { HolidayVillageTwoTone } from "@mui/icons-material";
 
 const API = "https://dry-chamber-65015.herokuapp.com/api/v1/productos/";
 
 const Body = () => {
   const [open2, setOpen2] = useState(false);
+  const [tabla, setTabla] = useState(false);
+
   const [propModal, setPropModal] = useState({
     name: "",
     costo: "",
@@ -30,6 +34,7 @@ const Body = () => {
 
   const handleClose = () => {
     setOpen2(false);
+    setPropModal({ ...propModal, name: "", costo: "", price: "", iva: 0 });
   };
   const handleChange = (event) => {
     if (event.target.name === "costo") {
@@ -38,11 +43,24 @@ const Body = () => {
     } else {
       setPropModal({ ...propModal, [event.target.name]: event.target.value });
     }
-    //console.log(`${event.target.name}: ${event.target.value}`);
   };
-
+  const reload = () => {
+    setTabla(!tabla);
+  };
   const handlePost = () => {
-    calculaiva(propModal.costo);
+    if (
+      propModal.name === "" ||
+      propModal.costo === "" ||
+      propModal.price === "" ||
+      propModal.iva === ""
+    ) {
+      return swal({
+        title: "Hubo un Error",
+        text: "Verifica los datos ingresados ",
+        icon: "error",
+        timer: "5000",
+      });
+    }
     const id = faker.datatype.uuid();
     const postObj = { id: "", name: "", costo: "", price: "", iva: 0 };
     postObj.id = id;
@@ -50,23 +68,28 @@ const Body = () => {
     postObj.costo = parseFloat(propModal.costo);
     postObj.price = parseFloat(propModal.price);
     postObj.iva = parseFloat(propModal.iva);
-    console.log(postObj);
 
     setOpen2(false);
     const post = API;
     async function fetchData() {
       const response = await axios.post(post, postObj);
+      if (response.status === 201) {
+        swal({
+          title: "Producto Creado",
+          text: "El producto fue creado correctamente",
+          icon: "success",
+          timer: "5000",
+        });
+      }
       console.log(response);
     }
     fetchData();
+    reload();
   };
 
   const calculaiva = async (costo) => {
     let newiva = parseFloat(costo * 0.16);
     propModal.iva = parseFloat(newiva.toFixed(2));
-    console.log(newiva);
-    // setPropModal({ ...propModal, ["iva"]: newiva.toFixed(2) });
-    console.log(propModal);
   };
   return (
     <Container>
@@ -75,8 +98,7 @@ const Body = () => {
           Nuevo Producto
         </Button>
       </div>
-      <ListaProducto />
-      {/* <ModalCrearProducto></ModalCrearProducto> */}
+      <ListaProducto value={tabla} onChange={tabla} />
 
       {/* MODAL Crear -------------------------------------- */}
       <Dialog open={open2} onClose={handleClose}>
@@ -94,6 +116,10 @@ const Body = () => {
             fullWidth
             variant="standard"
             onChange={handleChange}
+            // error={propModal.name === ""}
+            helperText={
+              propModal.name === "" ? "Por favor ingrese un valor" : " "
+            }
           />
           <TextField
             autoFocus
@@ -111,10 +137,13 @@ const Body = () => {
             fullWidth
             variant="standard"
             onChange={handleChange}
+            //error={propModal.costo === ""}
+            helperText={
+              propModal.costo === "" ? "Por favor ingrese un valor" : " "
+            }
           />
           <TextField
             autoFocus
-            error
             name="iva"
             InputProps={{
               startAdornment: (
@@ -133,7 +162,7 @@ const Body = () => {
           />
           <TextField
             autoFocus
-            id="costo"
+            id="price"
             required={true}
             name="price"
             InputProps={{
@@ -147,6 +176,10 @@ const Body = () => {
             fullWidth
             variant="standard"
             onChange={handleChange}
+            //error={propModal.price === ""}
+            helperText={
+              propModal.price === "" ? "Por favor ingrese un valor" : " "
+            }
           />
         </DialogContent>
         <DialogActions>
