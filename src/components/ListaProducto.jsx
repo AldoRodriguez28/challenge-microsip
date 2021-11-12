@@ -145,7 +145,7 @@ const ListaProducto = () => {
       <Table sx={{ minwidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Articulo</TableCell>
+            <TableCell>Artículo</TableCell>
             <TableCell align="center">Costo</TableCell>
             <TableCell align="right">IVA</TableCell>
             <TableCell align="right">Precio</TableCell>
@@ -191,7 +191,7 @@ const ListaProducto = () => {
         </TableBody>
         {/* MODAL Editar -------------------------------------- */}
         <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Editando Producto ...</DialogTitle>
+          <DialogTitle>Editando Producto</DialogTitle>
           <DialogContent>
             <TextField
               id="name"
@@ -200,7 +200,7 @@ const ListaProducto = () => {
               required={true}
               name="name"
               margin="dense"
-              label="Nombre de Producto"
+              label="Nombre de producto"
               defaultValue={propModal.name}
               type="text"
               fullWidth
@@ -213,7 +213,7 @@ const ListaProducto = () => {
               name="costo"
               required={true}
               margin="dense"
-              label="Costo del Producto"
+              label="Costo del producto"
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">$</InputAdornment>

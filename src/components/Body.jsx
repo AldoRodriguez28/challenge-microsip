@@ -74,7 +74,7 @@ const Body = () => {
       const response = await axios.post(post, postObj);
       if (response.status === 201) {
         swal({
-          title: "Producto Creado",
+          title: "Producto creado",
           text: "El producto fue creado correctamente",
           icon: "success",
           timer: "5000",
@@ -88,7 +88,9 @@ const Body = () => {
 
   const calculaiva = async (costo) => {
     let newiva = parseFloat(costo * 0.16);
-    propModal.iva = parseFloat(newiva.toFixed(2));
+    let newPrice = parseFloat(parseFloat(costo) + newiva);
+    propModal.iva = newiva.toFixed(2);
+    propModal.price = newPrice.toFixed(2);
   };
   return (
     <Container>
@@ -97,7 +99,14 @@ const Body = () => {
           Nuevo Producto
         </Button>
       </div>
-      <ListaProducto value={tabla} onChange={tabla} />
+      <ListaProducto className="listaProducto" />
+      <div class="attribution">
+        Challenge by{" "}
+        <a href="https://www.microsip.com/" target="_blank">
+          Microsip
+        </a>
+        . Coded by <a href="#">Aldo Rodriguez</a>.
+      </div>
 
       {/* MODAL Crear -------------------------------------- */}
       <Dialog open={open2} onClose={handleClose}>
@@ -161,6 +170,7 @@ const Body = () => {
           />
           <TextField
             autoFocus
+            disabled
             id="price"
             required={true}
             name="price"
@@ -174,6 +184,7 @@ const Body = () => {
             type="number"
             fullWidth
             variant="standard"
+            value={propModal.price}
             onChange={handleChange}
             //error={propModal.price === ""}
             helperText={
