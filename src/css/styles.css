@@ -1,0 +1,10 @@
+.botones-Modal div {
+  justify-content: space-between;
+}
+.nuevoProducto {
+  display: grid;
+  place-items: end;
+  margin: 10 0 10 0;
+  margin-bottom: 16px;
+  margin-top: 16px;
+}
